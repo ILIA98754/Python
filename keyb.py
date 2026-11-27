@@ -33,19 +33,20 @@ def menu_game(language):
     keyboard=[
         [
             KeyboardButton(text="easter"),
-            KeyboardButton(text="learn_play_game")
+            KeyboardButton(text="full walkthrough")
         ],
              ],
     resize_keyboard=True
     )
     return game_play
 
-question = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text="Add me",
-                callback_data="add_channel"
+def create_questions(language):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="Add me",
+                    callback_data="add_channel"
             )
         ],
         [
