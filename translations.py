@@ -38,3 +38,57 @@ texts = {
         },
     },
 }
+
+games = {
+    "portal": {
+        "en": {
+            "name": "Portal 2",
+            "walkthrough": "https://www.youtube.com/results?search_query=Portal+2+full+walkthrough",
+            "easters": "https://www.youtube.com/results?search_query=Portal+2+all+easter+eggs+secrets"
+        },
+        "ru": {
+            "name": "Портал 2",
+            "walkthrough": "https://www.youtube.com/results?search_query=Portal+2+полное+прохождение+на+русском",
+            "easters": "https://www.youtube.com/results?search_query=Portal+2+все+пасхалки+секреты+на+русском"
+        }
+    },
+
+    "stardew": {
+        "en": {
+            "name": "Stardew Valley",
+            "walkthrough": "https://www.youtube.com/results?search_query=Stardew+Valley+full+walkthrough",
+            "easters": "https://www.youtube.com/watch?v=q9LLNLuGJ-Q"
+        },
+        "ru": {
+            "name": "Долина Стардью",
+            "walkthrough": "https://www.youtube.com/results?search_query=Stardew+Valley+полное+прохождение+на+русском",
+            "easters": "https://www.youtube.com/results?search_query=Stardew+Valley+все+секреты+пасхалки+на+русском"
+        }
+    },
+
+    "undertale": {
+        "en": {
+            "name": "Undertale",
+            "walkthrough": "https://www.youtube.com/results?search_query=Undertale+full+walkthrough",
+            "easters": "https://www.youtube.com/results?search_query=Undertale+all+secrets+easter+eggs"
+        },
+        "ru": {
+            "name": "Андертейл",
+            "walkthrough": "https://www.youtube.com/results?search_query=Undertale+полное+прохождение+на+русском",
+            "easters": "https://www.youtube.com/results?search_query=Undertale+все+секреты+пасхалки+на+русском"
+        }
+    },
+
+    "talos": {
+        "en": {
+            "name": "The Talos Principle 2",
+            "walkthrough": "https://www.youtube.com/results?search_query=The+Talos+Principle+2+full+walkthrough",
+            "easters": "https://www.youtube.com/watch?v=HvveuyoJeRQ"
+        },
+        "ru": {
+            "name": "Принцип Талоса 2",
+            "walkthrough": "https://www.youtube.com/watch?v=iZwucInusPc",
+            "easters": "https://www.youtube.com/results?search_query=The+Talos+Principle+2+все+секреты+на+русском"
+        }
+    }
+}

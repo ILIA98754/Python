@@ -10,14 +10,17 @@ from aiogram.filters import Command
 from keyb import keyb, create_questions, create_menu, menu_game
 from aiogram import F
 from aiogram.types import CallbackQuery
-from translations import texts
+from translations import texts, games
 import asyncio
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.memory import MemoryStorage
 
 bot = Bot(
     token = '8700870573:AAGPlOfuiacKO3g-VYGYGDGINAHW72bJN04',
     default = DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
-dp = Dispatcher()
+dp = Dispatcher(storage=MemoryStorage())
 
 user_languages = {}
 @dp.message(Command("start"))
@@ -29,16 +32,16 @@ async def echo(message: Message):
     
 @dp.message(F.text == "🇷🇺 RU")
 async def russian(message: Message):
-    await message.answer("Здравствуйте!Добро пожаловать в ChatBot для игр Steam! Как мы можем вам помочь?", reply_markup=keyb)
+    await message.answer("Здравствуйте!Добро пожаловать в ChatBot для игр Steam! Как мы можем вам помочь?", reply_markup=create_questions)
 @dp.message(F.text == "🇬🇧 EN")
 async def english(message: Message):
-    await message.answer("Hello! Welcome to ChatBot for Steam games! How we can help you?", reply_markup=keyb)
+    await message.answer("Hello! Welcome to ChatBot for Steam games! How we can help you?", reply_markup=create_questions)
 
 @dp.message(F.text == "🇷🇺 RU")
 async def russian(message: Message):
     user_languages[message.from_user.id] ="ru"
     await message.answer(
-        texts["ru"]["добро пожаловать"],
+        texts["ru"]["добро пожаловать"], #call the ["welcome"]
         reply_markup=create_menu("ru")
     )
 
@@ -49,61 +52,6 @@ async def english(message: Message):
         texts["en"]["welcome"],
         reply_markup=create_menu("en")
     )
-
-games = {
-    "portal": {
-        "en": {
-            "name": "Portal 2",
-            "walkthrough": "https://www.youtube.com/results?search_query=Portal+2+full+walkthrough",
-            "easters": "https://www.youtube.com/results?search_query=Portal+2+all+easter+eggs+secrets"
-        },
-        "ru": {
-            "name": "Портал 2",
-            "walkthrough": "https://www.youtube.com/results?search_query=Portal+2+полное+прохождение+на+русском",
-            "easters": "https://www.youtube.com/results?search_query=Portal+2+все+пасхалки+секреты+на+русском"
-        }
-    },
-
-    "stardew": {
-        "en": {
-            "name": "Stardew Valley",
-            "walkthrough": "https://www.youtube.com/results?search_query=Stardew+Valley+full+walkthrough",
-            "easters": "https://www.youtube.com/watch?v=q9LLNLuGJ-Q"
-        },
-        "ru": {
-            "name": "Долина Стардью",
-            "walkthrough": "https://www.youtube.com/results?search_query=Stardew+Valley+полное+прохождение+на+русском",
-            "easters": "https://www.youtube.com/results?search_query=Stardew+Valley+все+секреты+пасхалки+на+русском"
-        }
-    },
-
-    "undertale": {
-        "en": {
-            "name": "Undertale",
-            "walkthrough": "https://www.youtube.com/results?search_query=Undertale+full+walkthrough",
-            "easters": "https://www.youtube.com/results?search_query=Undertale+all+secrets+easter+eggs"
-        },
-        "ru": {
-            "name": "Андертейл",
-            "walkthrough": "https://www.youtube.com/results?search_query=Undertale+полное+прохождение+на+русском",
-            "easters": "https://www.youtube.com/results?search_query=Undertale+все+секреты+пасхалки+на+русском"
-        }
-    },
-
-    "talos": {
-        "en": {
-            "name": "The Talos Principle 2",
-            "walkthrough": "https://www.youtube.com/results?search_query=The+Talos+Principle+2+full+walkthrough",
-            "easters": "https://www.youtube.com/watch?v=HvveuyoJeRQ"
-        },
-        "ru": {
-            "name": "Принцип Талоса 2",
-            "walkthrough": "https://www.youtube.com/watch?v=iZwucInusPc",
-            "easters": "https://www.youtube.com/results?search_query=The+Talos+Principle+2+все+секреты+на+русском"
-        }
-    }
-}
-
 
 @dp.message(Command("question"))
 async def start(message: Message):
@@ -131,6 +79,36 @@ async def add_channel(callback: CallbackQuery):
     await callback.message.answer(
         texts[language]["question_contact"]["no_chanel"]
     )
+
+class Registration(StatesGroup):
+    name = State()
+    number = State()
+    date = State()
+
+@dp.message(Command("registration"))
+async def from_FSM(message:Message, state: FSMContext):
+    await message.answer("Hi, enter your name please.")
+    await state.set_state(Registration.name)
+
+@dp.message(Registration.name)
+async def from_FSM(message:Message, state: FSMContext):
+    await message.answer("Ok, now enter your number.")
+    await state.update_data(name=message.text)
+    await state.set_state(Registration.number)
+
+@dp.message(Registration.number)
+async def name_FSM(message:Message, state: FSMContext):
+    await message.answer("Thank you, enter please the data, when you want to start")
+    await state.update_data(number=message.text)
+    await state.set_state(Registration.date)
+
+@dp.message(Registration.date)
+async def name_FSM(message:Message, state: FSMContext):
+    await state.update_data(date=message.text)
+    data = await state.get_data()
+    print(data)
+    await message.answer("Thank you, you request sent.")
+    await state.clear()
 
 async def main():
     await dp.start_polling(bot)
